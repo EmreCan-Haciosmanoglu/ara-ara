@@ -24,7 +24,7 @@ export class Conversation extends Component {
     }
 
     getResponse(sender, reciever) {
-        return fetch('http://192.168.1.42:3000/conv/?sender=' + sender + '&reciever=' + reciever)
+        return fetch('https://ara--ara.herokuapp.com/conv/?sender=' + sender + '&reciever=' + reciever)
             .then((response) => response.json())
             .then((json) => {
                 return json;

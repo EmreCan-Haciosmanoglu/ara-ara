@@ -4,12 +4,30 @@ import { Conversation } from './Pages/Conversation';
 import { MainPage } from './Pages/MainPage';
 import { AddContact } from './Pages/AddContact';
 import { ChangeMyNumber } from './Pages/ChangeMyNumber'
+import { LoginPage } from './Pages/LoginPage';
 
 export default function App() {
-  const [page, setPage] = useState('Main');
+  const [page, setPage] = useState('LoginPage');
   const [my_num, setMyNum] = useState(905554443321);
   const [num, setNum] = useState(0);
-  if (page == 'ChangeMyNumber') {
+  const [token, setToken] = useState('');
+  const [password, setPassword] = useState('');
+
+  if (page == 'LoginPage') {
+    return (
+      <LoginPage
+        cacheLoginInfo={(n, p, t) => {
+          setMyNum(n)
+          setPassword(p)
+          setToken(t)
+        }}
+        onLoggedIn={() => {
+          setPage("Main");
+        }}
+      />
+    );
+  }
+  else if (page == 'ChangeMyNumber') {
     return (
       <ChangeMyNumber
         my_number={my_num}
@@ -45,8 +63,8 @@ export default function App() {
         onTitlePress={() => {
           setPage("Main");
         }}
-        onSendMessage={(text_to_send)=>{
-          fetch('http://192.168.1.42:3000/conv/', {
+        onSendMessage={(text_to_send) => {
+          fetch('https://ara--ara.herokuapp.com/conv/', {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -55,15 +73,15 @@ export default function App() {
             body: JSON.stringify({
               "sender": my_num,
               "reciever": num,
-              "message":text_to_send
+              "message": text_to_send
             })
           }).then((response) => response.json())
-          .then((json) => {
-             console.warn(json);
-          })
-          .catch((error) => {
+            .then((json) => {
+              console.warn(json);
+            })
+            .catch((error) => {
               console.error(error);
-          });
+            });
         }}
       />
     );
@@ -74,7 +92,7 @@ export default function App() {
         my_number={my_num}
         onContactAdd={(number) => {
           setPage("Main");
-          fetch('http://192.168.1.42:3000/contact/', {
+          fetch('https://ara--ara.herokuapp.com/contact/', {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -85,12 +103,12 @@ export default function App() {
               "number": number
             })
           }).then((response) => response.json())
-          .then((json) => {
-             console.warn(json);
-          })
-          .catch((error) => {
+            .then((json) => {
+              console.warn(json);
+            })
+            .catch((error) => {
               console.error(error);
-          });
+            });
         }}
         onCancel={() => {
           setPage("Main");

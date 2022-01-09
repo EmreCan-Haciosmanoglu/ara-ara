@@ -17,7 +17,7 @@ export class MainPage extends Component {
     }
 
     getResponse() {
-        return fetch('http://192.168.1.42:3000/contacts/?owner=' + this.props.my_number)
+        return fetch('https://ara--ara.herokuapp.com/contacts/?owner=' + this.props.my_number)
             .then((response) => response.json())
             .then((json) => {
                 return json;
