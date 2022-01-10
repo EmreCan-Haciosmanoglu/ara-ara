@@ -1,7 +1,7 @@
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { StyleSheet, Text, Button, TouchableOpacity, View } from 'react-native';
-import { CheckBox, TextInput } from 'react-native-web';
+import { Button, StyleSheet, TextInput, Text, TouchableOpacity, View } from 'react-native';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 export class LoginPage extends Component {
     constructor(props) {
@@ -48,9 +48,9 @@ export class LoginPage extends Component {
         let response = await this.getRegistered()
         if (!response.success) return console.error(response.error)
         if (this.state.remember) {
-            AsyncStorageLib.setItem('number', this.state.number)
-            AsyncStorageLib.setItem('password', this.state.password)
-            AsyncStorageLib.setItem('token', response.token)
+            await AsyncStorageLib.setItem('number', this.state.number)
+            await AsyncStorageLib.setItem('password', this.state.password)
+            await AsyncStorageLib.setItem('token', response.token)
         }
         this.props.cacheLoginInfo(
             this.state.number,
@@ -146,33 +146,23 @@ export class LoginPage extends Component {
                 <View
                     style={styles.remember}
                 >
-                    <CheckBox
-                        value={this.state.remember}
-                        onValueChange={() => this.setState({ remember: !this.state.remember })}
+                    <BouncyCheckbox
+                        isChecked={this.state.remember}
+                        onPress={() => this.setState({ remember: !this.state.remember })}
                     />
                     <Text style={{
-                        marginLeft: "5px"
+                        marginLeft: 5
                     }}>Remember me!!</Text>
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity
-                        style={styles.button}
+                    <Button
                         onPress={this.login}
-                    >
-                        <Text
-                            style={styles.button_text}>
-                            log in
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.button}
+                        title="log in"
+                    />
+                    <Button
                         onPress={this.register}
-                    >
-                        <Text
-                            style={styles.button_text}>
-                            Register
-                        </Text>
-                    </TouchableOpacity>
+                        title="Register"
+                    />
                 </View>
             </View>
         )
@@ -181,39 +171,39 @@ export class LoginPage extends Component {
 
 const styles = StyleSheet.create({
     title: {
-        height: "150px",
+        height: 150,
         width: "70%",
         textAlign: 'center',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 50,
         fontFamily: "sans-serif-medium",
-        margin: "5px"
+        margin: 5
     },
     text_input: {
-        height: "50px",
+        height: 50,
         width: "70%",
         backgroundColor: '#aac',
         textAlign: 'center',
-        margin: "5px"
+        margin: 5
     },
     remember: {
-        height: "30px",
+        height: 30,
         width: "70%",
         textAlign: 'center',
-        margin: "5px",
+        margin: 5,
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'center'
     },
     buttons: {
-        height: "30px",
-        width: "70%",
+        height: 40,
+        width: "42%",
         textAlign: 'center',
-        margin: "5px",
+        margin: 5,
         flexDirection: "row",
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'space-between'
     },
     container: {
         flex: 1,
@@ -223,8 +213,8 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: "center",
-        margin: "5px",
-        borderRadius: "3px",
+        margin: 5,
+        borderRadius: 3,
         backgroundColor: "rgb(33, 150, 243)",
         padding: 10
     },

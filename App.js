@@ -42,15 +42,20 @@ export default function App() {
     return (
       <MainPage
         my_number={my_num}
+        cacheLoginInfo={(n, p, t) => {
+          setMyNum(n)
+          setPassword(p)
+          setToken(t)
+        }}
         onPress={(page_name, contact_number) => {
           setPage(page_name);
           setNum(contact_number);
         }}
         onAddContact={() => {
-          setPage("AddContactPage")
+          setPage("LoginPage")
         }}
-        onChangeMyNumber={() => {
-          setPage("ChangeMyNumber")
+        logout={() => {
+          setPage("LoginPage")
         }}
       />
     );

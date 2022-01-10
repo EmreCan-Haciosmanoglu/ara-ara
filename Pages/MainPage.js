@@ -1,3 +1,4 @@
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { StyleSheet, Text, Button, View } from 'react-native';
 import { ContactList } from '../Components/ContactList';
@@ -26,8 +27,13 @@ export class MainPage extends Component {
                 console.error(error);
             });
     };
-
-
+    logout = async () => {
+        await AsyncStorageLib.removeItem('number')
+        await AsyncStorageLib.removeItem('password')
+        await AsyncStorageLib.removeItem('token')
+        this.props.cacheLoginInfo(0, "", "")
+        this.props.logout()
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -40,8 +46,8 @@ export class MainPage extends Component {
                     ></Button>
                     <Button
                         style={styles.changeNumber}
-                        title="    !    "
-                        onPress={this.props.onChangeMyNumber}
+                        title="    X   "
+                        onPress={this.logout}
                     ></Button>
                 </View>
                 <ContactList

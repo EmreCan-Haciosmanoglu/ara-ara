@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'react-native';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { Button, StyleSheet, View, TextInput } from 'react-native';
 
 export class AddContact extends Component {
     constructor(props) {
