@@ -61,7 +61,7 @@ export class LoginPage extends Component {
     }
 
     getRegistered() {
-        return fetch('http://192.168.1.100:3000/register/', {
+        return fetch('https://ara--ara.herokuapp.com/register/', {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -107,13 +107,19 @@ export class LoginPage extends Component {
             if (number !== null && password !== null && token !== null) {
                 let response = await this.getVerified(token, number, password)
                 console.log(response)
-                this.props.setMyNumber(number)
+                if (!response.success) return console.error(response.error)
+                this.props.cacheLoginInfo(
+                    number,
+                    password,
+                    token
+                )
+                this.props.onLoggedIn()
             }
             else {
                 console.log("no data have been stored")
             }
         } catch (error) {
-            console.log("error= " + error)
+            console.error(error)
         }
     };
 
