@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import { Conversation } from './Pages/Conversation';
 import { MainPage } from './Pages/MainPage';
 import { AddContact } from './Pages/AddContact';
-import { ChangeMyNumber } from './Pages/ChangeMyNumber'
 import { LoginPage } from './Pages/LoginPage';
 
 export default function App() {
@@ -27,21 +26,12 @@ export default function App() {
       />
     );
   }
-  else if (page == 'ChangeMyNumber') {
-    return (
-      <ChangeMyNumber
-        my_number={my_num}
-        onTextChange={(number) => { setMyNum(number) }}
-        onPress={() => {
-          setPage("Main");
-        }}
-      />
-    );
-  }
   else if (page == 'Main') {
     return (
       <MainPage
-        my_number={my_num}
+        token={token}
+        password={password}
+        number={my_num}
         cacheLoginInfo={(n, p, t) => {
           setMyNum(n)
           setPassword(p)
@@ -51,12 +41,8 @@ export default function App() {
           setPage(page_name);
           setNum(contact_number);
         }}
-        onAddContact={() => {
-          setPage("LoginPage")
-        }}
-        logout={() => {
-          setPage("LoginPage")
-        }}
+        onAddContact={() => setPage("AddContactPage")}
+        logout={() => setPage("LoginPage")}
       />
     );
   }
@@ -64,6 +50,8 @@ export default function App() {
     return (
       <Conversation
         my_number={my_num}
+        password={password}
+        token={token}
         contact_number={num}
         onTitlePress={() => {
           setPage("Main");
@@ -78,11 +66,13 @@ export default function App() {
             body: JSON.stringify({
               "sender": my_num,
               "reciever": num,
-              "message": text_to_send
+              "message": text_to_send,
+              "password": password,
+              "token": token
             })
           }).then((response) => response.json())
             .then((json) => {
-              console.warn(json);
+              if (!json.success) console.error(json);
             })
             .catch((error) => {
               console.error(error);
@@ -95,7 +85,7 @@ export default function App() {
     return (
       <AddContact
         my_number={my_num}
-        onContactAdd={(number) => {
+        onContactAdd={(number, name) => {
           setPage("Main");
           fetch('https://ara--ara.herokuapp.com/contact/', {
             method: 'POST',
@@ -105,11 +95,14 @@ export default function App() {
             },
             body: JSON.stringify({
               "owner": my_num,
-              "number": number
+              "number": number,
+              "name": name,
+              "password": password,
+              "token": token
             })
           }).then((response) => response.json())
             .then((json) => {
-              console.warn(json);
+              if (!json.success) console.error(json.error);
             })
             .catch((error) => {
               console.error(error);

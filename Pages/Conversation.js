@@ -14,8 +14,18 @@ export class Conversation extends Component {
     }
 
     getConversation = async () => {
-        let obj1 = await this.getResponse(this.props.my_number, this.props.contact_number);
-        let obj2 = await this.getResponse(this.props.contact_number, this.props.my_number);
+        let obj1 = await this.getResponse(
+            this.props.my_number,
+            this.props.contact_number,
+            this.props.my_number,
+            this.props.password,
+            this.props.token);
+        let obj2 = await this.getResponse(
+            this.props.contact_number,
+            this.props.my_number,
+            this.props.my_number,
+            this.props.password,
+            this.props.token);
         var list = obj1.data.concat(obj2.data);
         list.sort(function (a, b) {
             return new Date(a.date) - new Date(b.date);
@@ -23,8 +33,14 @@ export class Conversation extends Component {
         this.setState({ conversation_list: list })
     }
 
-    getResponse(sender, reciever) {
-        return fetch('https://ara--ara.herokuapp.com/conv/?sender=' + sender + '&reciever=' + reciever)
+    getResponse(sender, reciever, mynumber, password, token) {
+        return fetch('https://ara--ara.herokuapp.com/conv/?' +
+            'sender=' + sender +
+            '&reciever=' + reciever +
+            '&mynumber=' + mynumber +
+            '&password=' + password +
+            '&token=' + token
+        )
             .then((response) => response.json())
             .then((json) => {
                 return json;
@@ -71,7 +87,7 @@ export class Conversation extends Component {
                             this.props.onSendMessage(
                                 this.state.text_to_send
                             );
-                            this.setState({text_to_send:""})
+                            this.setState({ text_to_send: "" })
                             this.getConversation()
                         }}>
                     </Button>

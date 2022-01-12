@@ -11,14 +11,21 @@ export class MainPage extends Component {
         };
         this.getContactList();
     }
-
     getContactList = async () => {
-        let obj = await this.getResponse()
-        this.setState({ "contact_list": obj.data })
+        let response = await this.getContacts()
+        if (!response.success) {
+            consooe.error(response.error)
+            this.logout()
+            return
+        }
+        this.setState({ "contact_list": response.data })
     }
 
-    getResponse() {
-        return fetch('https://ara--ara.herokuapp.com/contacts/?owner=' + this.props.my_number)
+    getContacts() {
+        return fetch('https://ara--ara.herokuapp.com/contacts/?' +
+            'token=' + this.props.token +
+            '&mynumber=' + this.props.number +
+            '&mypassword=' + this.props.password)
             .then((response) => response.json())
             .then((json) => {
                 return json;
@@ -38,7 +45,7 @@ export class MainPage extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.top}>
-                    <Text style={styles.title}>{"My Number: +" + this.props.my_number}</Text>
+                    <Text style={styles.title}>{"My Number: " + this.props.number}</Text>
                     <Button
                         style={styles.addContract}
                         title="    +    "
@@ -55,7 +62,7 @@ export class MainPage extends Component {
                         width: '100%',
                         height: '80%'
                     }}
-                    my_number={this.state.my_number}
+                    my_number={this.props.number}
                     contact_list={this.state.contact_list}
                     onPress={this.props.onPress}
                 />
